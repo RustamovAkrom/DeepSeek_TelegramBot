@@ -1,14 +1,33 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from config import TELEGRAM_BOT_TOKEN
-from app.handlers import router
+from config import settings
+from app.handlers.admin import router as admin_router
+from app.handlers.start import router as start_router
+from app.handlers.ai_chat import router as ai_chat_router
+from app.handlers.user_profile import router as user_profile_router
+from app.db.base import engine, Base
+
+
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 
 async def main():
-    bot = Bot(token=TELEGRAM_BOT_TOKEN)
+    await init_db()
+
+    bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
     dp = Dispatcher()
 
-    dp.include_router(router)
-    await dp.start_polling(bot)
+    dp.include_router(start_router)
+    dp.include_router(admin_router)
+    dp.include_router(user_profile_router)
+    dp.include_router(ai_chat_router)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
 
 if __name__=='__main__':
     asyncio.run(main())
