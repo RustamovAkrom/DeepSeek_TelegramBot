@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, func
-from sqlalchemy.dialects.sqlite import JSON as SQLITE_JSON
 from app.db.base import Base
 import sqlalchemy as sa
-
+from config import settings
 
 JSONType = sa.JSON
 
@@ -36,5 +35,16 @@ class User(Base):
         history.append({"role": role, "content": content})
         self.ai_history = history[-max_len:]
 
+    def clear_history(self):
+        self.ai_history = []
+
+    def get_api_key(self) -> str:
+        meta = self.meta or {}
+        return meta.get("api_key") or settings.DEEPSEEK_API_KEY
+    
+    def get_model(self) -> str:
+        meta = self.meta or {}
+        return meta.get("default_model") or settings.DEFAULT_MODEL
+    
     def __repr__(self):
         return f"<User tg_id={self.tg_id} username={self.username}>"

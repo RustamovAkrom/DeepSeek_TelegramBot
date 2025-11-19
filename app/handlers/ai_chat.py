@@ -32,16 +32,17 @@ async def ai_chat(message: Message, state: FSMContext):
 
     async with get_session() as session:
         user = await ensure_user(session, message.from_user)
+
         ai_service = AIService()
 
         try:
             response = await ai_service.generate(
                 user=user,
                 text=user_text,
-                model=settings.DEFAULT_MODEL,
                 save_history=True,
                 session=session
             )
+            
         except Exception as e:
             logging.exception("Error generating AI response")
             await message.reply(f"Error in generating answer AI: {e}")

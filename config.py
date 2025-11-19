@@ -6,7 +6,7 @@ from typing import List, Union
 class Settings(BaseSettings):
     DEEPSEEK_API_KEY: str
     DEFAULT_MODEL: str = "deepseek/deepseek-chat-v3-0324"
-
+    BASE_URL: str = "https://openrouter.ai/api/v1"
     TELEGRAM_BOT_TOKEN: str
     ADMIN_IDS: list[int] = []
 
