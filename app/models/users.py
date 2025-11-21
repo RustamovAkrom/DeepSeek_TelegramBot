@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, func
+from sqlalchemy.orm import relationship
 from app.db.base import Base
 import sqlalchemy as sa
 from config import settings
@@ -20,23 +21,13 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     meta = Column(JSONType, nullable=True)
-    ai_history = Column(JSONType, nullable=True, default=list)
 
-    @property
-    def get_ai_history(self) -> list:
-        return self.ai_history or []
-    
-    def add_to_history(self, role: str, content: str, max_len: int = 5):
-        """
-        Добавляет сообщение в историю AI, ограничивая её max_len.
-        """
-        history = self.ai_history or []
-        
-        history.append({"role": role, "content": content})
-        self.ai_history = history[-max_len:]
-
-    def clear_history(self):
-        self.ai_history = []
+    histories = relationship(
+        "AIHistory",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
 
     def get_api_key(self) -> str:
         meta = self.meta or {}

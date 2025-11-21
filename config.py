@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     DEEPSEEK_API_KEY: str
     DEFAULT_MODEL: str = "deepseek/deepseek-chat-v3-0324"
     BASE_URL: str = "https://openrouter.ai/api/v1"
+
+    MAX_HISTORY: int = 15
+    
     TELEGRAM_BOT_TOKEN: str
     ADMIN_IDS: list[int] = []
 
@@ -15,6 +18,14 @@ class Settings(BaseSettings):
     
     ENV: str = "dev" # "dev" or "prod"
 
+    AVAILABLE_MODELS: dict[str, str] = {
+        "DeepSeek V3 (default)": "deepseek/deepseek-chat-v3-0324",
+        "DeepSeek V3": "deepseek/deepseek-chat-v3.1",
+        "DeepSeek V3.2-exp": "deepseek/deepseek-v3.2-exp",
+        "DeepSeek R1": "deepseek/deepseek-r1",
+        "DeepSeek V3 chat": "deepseek/deepseek-chat"
+    }
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

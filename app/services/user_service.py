@@ -9,11 +9,11 @@ async def ensure_user(session: AsyncSession, tg_user: TgUser) -> User:
     existing = await crud_users.CRUDUser.get_by_tg_id(session, tg_user.id)
     data = {
         "tg_id": tg_user.id,
-        "username": getattr(tg_user, "username", None),
-        "first_name": getattr(tg_user, "first_name", None),
-        "last_name": getattr(tg_user, "last_name", None),
-        "language_code": getattr(tg_user, "language_code", None),
-        "is_bot": getattr(tg_user, "is_bot", False),
+        "username": tg_user.username,
+        "first_name": tg_user.first_name,
+        "last_name": tg_user.last_name,
+        "language_code": tg_user.language_code,
+        "is_bot": tg_user.is_bot,
     }
     if existing is None:
         user = await crud_users.CRUDUser.create(session, **data)

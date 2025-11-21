@@ -31,6 +31,7 @@ async def admin_users(cb: CallbackQuery):
     page = int(parts[2]) if len(parts) > 2 else 0
     await admin_users_page(cb, page)
 
+
 @router.callback_query(lambda c: c.data and c.data.startswith("admin:user:delete"))
 async def admin_user_delete(cb: CallbackQuery):
     if not is_admin(cb.from_user.id):
@@ -106,6 +107,7 @@ async def admin_menu(cb: CallbackQuery):
     )
     await cb.answer()
 
+
 async def safe_edit_message(msg: Message, text: str, reply_markup=None):
     try:
         old_text = msg.text
@@ -120,6 +122,7 @@ async def safe_edit_message(msg: Message, text: str, reply_markup=None):
     except Exception as e:
         if "message is not modified" not in str(e):
             raise e
+
 
 async def admin_users_page(cb: CallbackQuery, page: int = 0):
     limit = 10

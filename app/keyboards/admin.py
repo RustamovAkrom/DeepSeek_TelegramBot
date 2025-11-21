@@ -6,9 +6,9 @@ def admin_main_kb():
             [
                 InlineKeyboardButton(text="Users", callback_data="admin:users:0")
             ],
-            [
-                InlineKeyboardButton(text="Stats", callback_data="admin:stats")
-            ]
+            # [
+            #     InlineKeyboardButton(text="Stats", callback_data="admin:stats")
+            # ]
         ]
     )
 
@@ -16,12 +16,6 @@ def admin_main_kb():
 def admin_user_actions(tg_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="👁 View Profile",
-                    callback_data=f"admin:user:view:{tg_id}"
-                )
-            ],
             [
                 InlineKeyboardButton(
                     text="❌ Delete User",

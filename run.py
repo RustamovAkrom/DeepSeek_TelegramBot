@@ -3,9 +3,11 @@ from aiogram import Bot, Dispatcher
 from config import settings
 from app.handlers.admin import router as admin_router
 from app.handlers.start import router as start_router
-from app.handlers.ai_chat import router as ai_chat_router
 from app.handlers.user_profile import router as user_profile_router
-from app.handlers.settings import router as settings_router
+from app.handlers.ai_chat import router as ai_chat_router
+from app.handlers.ai_models import router as ai_models_router
+from app.handlers.help import router as help_router
+from app.handlers.language_change import router as lang_change_router
 from app.db.base import engine, Base
 
 
@@ -23,8 +25,10 @@ async def main():
     dp.include_router(start_router)
     dp.include_router(admin_router)
     dp.include_router(user_profile_router)
-    dp.include_router(settings_router)
-    dp.include_router(ai_chat_router)
+    dp.include_router(lang_change_router)
+    dp.include_router(help_router)
+    dp.include_router(ai_models_router)
+    dp.include_router(ai_chat_router) # It must be last
 
     try:
         await dp.start_polling(bot)
@@ -32,4 +36,8 @@ async def main():
         await bot.session.close()
 
 if __name__=='__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Bot stopped")
+
