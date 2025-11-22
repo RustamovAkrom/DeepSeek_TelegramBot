@@ -7,6 +7,7 @@ from aiogram.types import User as TgUser
 async def ensure_user(session: AsyncSession, tg_user: TgUser) -> User:
     """Создаёт или обновляет пользователя в БД."""
     existing = await crud_users.CRUDUser.get_by_tg_id(session, tg_user.id)
+
     data = {
         "tg_id": tg_user.id,
         "username": tg_user.username,

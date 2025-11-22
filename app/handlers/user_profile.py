@@ -42,7 +42,11 @@ async def show_profile(message: Message, state: FSMContext):
 
         buttons = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="History", callback_data="history")]
+                [
+                    InlineKeyboardButton(
+                        text="Clear History", callback_data="clear_history"
+                    )
+                ]
             ]
         )
 
@@ -52,28 +56,28 @@ async def show_profile(message: Message, state: FSMContext):
 
 
 # User History
-@router.callback_query(F.data == "history")
-async def show_history(message: Message, state: FSMContext):
-    async with get_session() as session:
-        user = await ensure_user(session, message.from_user)
-        history = await CRUDHistory.list_user_history(session, user.id)
-        text = "🧾 Your History:\n\n" + "\n".join(
-            [f"{i+1}. {h.role}: {h.content}" for i, h in enumerate(history)]
-        )
+# @router.callback_query(F.data == "history")
+# async def show_history(message: Message, state: FSMContext):
+#     async with get_session() as session:
+#         user = await ensure_user(session, message.from_user)
+#         history = await CRUDHistory.list_user_history(session, user.id)
+#         text = "🧾 Your History:\n\n" + "\n".join(
+#             [f"{i+1}. {h.role}: {h.content}" for i, h in enumerate(history)]
+#         )
 
-        buttons = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="Clear History", callback_data="clear_history"
-                    )
-                ],
-                [InlineKeyboardButton(text="Settings AI", callback_data="ai_settings")],
-            ]
-        )
+#         buttons = InlineKeyboardMarkup(
+#             inline_keyboard=[
+#                 [
+#                     InlineKeyboardButton(
+#                         text="Clear History", callback_data="clear_history"
+#                     )
+#                 ],
+#                 [InlineKeyboardButton(text="Settings AI", callback_data="ai_settings")],
+#             ]
+#         )
 
-        for i in range(0, len(text), 4000):
-            await message.answer(text[i : i + 4000], reply_markup=buttons)
+#         for i in range(0, len(text), 4000):
+#             await message.answer(text[i : i + 4000], reply_markup=buttons)
 
 
 # Clear User History
@@ -81,5 +85,5 @@ async def show_history(message: Message, state: FSMContext):
 async def clear_history_cb(callback: CallbackQuery, state: FSMContext):
     async with get_session() as session:
         user = await ensure_user(session, callback.from_user)
-
+        await CRUDHistory.clear(session, user.id)
         await callback.message.edit_text("✅ History cleaned")

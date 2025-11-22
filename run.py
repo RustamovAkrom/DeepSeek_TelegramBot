@@ -7,7 +7,6 @@ from app.handlers.user_profile import router as user_profile_router
 from app.handlers.ai_chat import router as ai_chat_router
 from app.handlers.ai_models import router as ai_models_router
 from app.handlers.help import router as help_router
-from app.handlers.language_change import router as lang_change_router
 from app.db.base import engine, Base
 
 
@@ -25,7 +24,6 @@ async def main():
     dp.include_router(start_router)
     dp.include_router(admin_router)
     dp.include_router(user_profile_router)
-    dp.include_router(lang_change_router)
     dp.include_router(help_router)
     dp.include_router(ai_models_router)
     dp.include_router(ai_chat_router)  # It must be last

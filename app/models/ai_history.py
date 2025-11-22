@@ -1,16 +1,14 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, BigInteger
 from sqlalchemy.orm import relationship
-from app.db.base import Base
+from app.db.base import BaseModel
 
 
-class AIHistory(Base):
+class AIHistory(BaseModel):
     __tablename__ = "ai_histories"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(
         BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-
     role = Column(String, nullable=False)
     content = Column(String, nullable=False)
 

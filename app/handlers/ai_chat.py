@@ -37,10 +37,7 @@ async def ai_chat(message: Message, state: FSMContext):
 
         try:
             response = await ai_service.generate(
-                user=user,
-                text=user_text, 
-                save_history=True, 
-                session=session
+                user=user, text=user_text, save_history=True, session=session
             )
 
         except Exception as e:
