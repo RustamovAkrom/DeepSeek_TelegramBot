@@ -8,7 +8,7 @@ class AIHistory(Base):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     role = Column(String, nullable=False)

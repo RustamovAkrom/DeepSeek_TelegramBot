@@ -9,6 +9,7 @@ JSONType = sa.JSON
 
 class User(Base):
     __tablename__ = "users"
+    
     id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     tg_id = Column(BigInteger, unique=True, index=True, nullable=False)
     token = Column(String, nullable=True)
