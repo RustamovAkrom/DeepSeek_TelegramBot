@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from sqlalchemy import select, update, delete, func
+from sqlalchemy import select, delete, func
 from app.models.users import User
 from typing import Optional, List, Dict, Any
 

@@ -8,10 +8,8 @@ from aiogram.types import (
 )
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.context import FSMContext
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.base import get_session
 from app.services.user_service import ensure_user
-from app.utils.base import send_long
 from app.crud.history import CRUDHistory
 
 router = Router()

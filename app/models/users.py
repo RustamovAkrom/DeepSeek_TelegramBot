@@ -1,10 +1,8 @@
 from sqlalchemy import (
     Column,
-    Integer,
     String,
     DateTime,
     Boolean,
-    JSON,
     func,
     BigInteger,
 )

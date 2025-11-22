@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import Column, Integer, BigInteger
 from typing import AsyncIterator
 from config import settings
-from typing import AsyncIterator
 
 
 DATABASE_URL = settings.current_database_url
@@ -44,4 +43,3 @@ async def get_session() -> AsyncIterator[AsyncSession]:
 
 
 # Import models
-import app.models

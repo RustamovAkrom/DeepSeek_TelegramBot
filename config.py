@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import validator
-from typing import List, Union
+from typing import Union
 
 
 class Settings(BaseSettings):

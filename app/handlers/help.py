@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message
 from aiogram.filters import Command
 
 from app.crud.users import CRUDUser
