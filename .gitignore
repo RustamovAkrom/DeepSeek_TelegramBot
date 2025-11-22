@@ -3,3 +3,4 @@ docs/
 .venv/
 .env
 test.db
+.ruff_cache/

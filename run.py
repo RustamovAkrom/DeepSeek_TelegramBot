@@ -1,5 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher
+from aiogram.types import BotCommand
 from config import settings
 from app.handlers.admin import router as admin_router
 from app.handlers.start import router as start_router
@@ -15,12 +16,27 @@ async def init_db():
         await conn.run_sync(Base.metadata.create_all)
 
 
+async def set_commands(bot: Bot):
+    commands = [
+        BotCommand(command="start", description="Start the bot"),
+        BotCommand(command="help", description="Show help information"),
+        BotCommand(command="history", description="Show your AI history"),
+        BotCommand(command="clear", description="Clear your AI history"),
+    ]
+    await bot.set_my_commands(commands)
+
+
 async def main():
+    # Initialize database
     await init_db()
 
     bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
     dp = Dispatcher()
 
+    # Add commands menu
+    await set_commands(bot)
+
+    # Register routers from handlers
     dp.include_router(start_router)
     dp.include_router(admin_router)
     dp.include_router(user_profile_router)
