@@ -2,11 +2,14 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
+
 class AIHistory(Base):
     __tablename__ = "ai_histories"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
 
     role = Column(String, nullable=False)
     content = Column(String, nullable=False)
@@ -17,4 +20,3 @@ class AIHistory(Base):
 
     def __repr__(self):
         return f"<{self.id} - User({self.user_id})>"
-    

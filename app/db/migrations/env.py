@@ -19,7 +19,9 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 # Только DATABASE_URL из env
-DATABASE_URL = settings.DATABASE_URL if settings.ENV == "prod" else settings.TEST_DATABASE_URL
+DATABASE_URL = (
+    settings.DATABASE_URL if settings.ENV == "prod" else settings.TEST_DATABASE_URL
+)
 
 
 def run_migrations_offline():

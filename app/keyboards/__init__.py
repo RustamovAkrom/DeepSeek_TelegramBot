@@ -1,1 +1,1 @@
-from .admin import * # noqa
+from .admin import *  # noqa

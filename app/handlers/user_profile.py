@@ -1,9 +1,9 @@
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import (
-    Message, 
-    CallbackQuery, 
-    InlineKeyboardButton, 
+    Message,
+    CallbackQuery,
+    InlineKeyboardButton,
     InlineKeyboardMarkup,
 )
 from aiogram.enums.parse_mode import ParseMode
@@ -16,13 +16,14 @@ from app.crud.history import CRUDHistory
 
 router = Router()
 
+
 # User Profile
 @router.message(Command("profile"))
 async def show_profile(message: Message, state: FSMContext):
     async with get_session() as session:
         user = await ensure_user(session, message.from_user)
         user_profile = user
-        
+
         # For Markdown V2
         username_md = user_profile.username or "No username"
         first_name_md = user_profile.first_name or "No first name"
@@ -39,17 +40,16 @@ async def show_profile(message: Message, state: FSMContext):
             f"<b>Language:</b> <code>{language_md}</code>"
         )
 
-        buttons = InlineKeyboardMarkup(inline_keyboard=[
-            [
-                InlineKeyboardButton(text="History", callback_data="history")
+        buttons = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="History", callback_data="history")]
             ]
-        ])
+        )
 
         await message.answer(
-            text=profile_text,
-            reply_markup=buttons,
-            parse_mode=ParseMode.HTML
+            text=profile_text, reply_markup=buttons, parse_mode=ParseMode.HTML
         )
+
 
 # User History
 @router.callback_query(F.data == "history")
@@ -61,13 +61,20 @@ async def show_history(message: Message, state: FSMContext):
             [f"{i+1}. {h.role}: {h.content}" for i, h in enumerate(history)]
         )
 
-        buttons = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="Clear History", callback_data="clear_history")],
-            [InlineKeyboardButton(text="Settings AI", callback_data="ai_settings")]
-        ])
+        buttons = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="Clear History", callback_data="clear_history"
+                    )
+                ],
+                [InlineKeyboardButton(text="Settings AI", callback_data="ai_settings")],
+            ]
+        )
 
-        for i in range(0, len(text),4000):
-            await message.answer(text[i: i + 4000], reply_markup=buttons)
+        for i in range(0, len(text), 4000):
+            await message.answer(text[i : i + 4000], reply_markup=buttons)
+
 
 # Clear User History
 @router.callback_query(F.data == "clear_history")

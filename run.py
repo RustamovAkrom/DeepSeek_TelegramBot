@@ -28,16 +28,16 @@ async def main():
     dp.include_router(lang_change_router)
     dp.include_router(help_router)
     dp.include_router(ai_models_router)
-    dp.include_router(ai_chat_router) # It must be last
+    dp.include_router(ai_chat_router)  # It must be last
 
     try:
         await dp.start_polling(bot)
     finally:
         await bot.session.close()
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
         print("Bot stopped")
-

@@ -1,5 +1,10 @@
 from aiogram import Router
-from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from aiogram.filters import Command
 from config import settings
 from app.db.base import AsyncSessionLocal
@@ -99,11 +104,9 @@ async def admin_menu(cb: CallbackQuery):
     if not is_admin(cb.from_user.id):
         await cb.answer("Нет доступа!", show_alert=True)
         return
-    
+
     await safe_edit_message(
-        cb.message,
-        text="Administrator panel:",
-        reply_markup=admin_main_kb()
+        cb.message, text="Administrator panel:", reply_markup=admin_main_kb()
     )
     await cb.answer()
 
@@ -129,7 +132,7 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
 
     async with AsyncSessionLocal() as session:
         total_users = await CRUDUser.count_users(session)  # добавить метод count_users
-        users = await CRUDUser.list_users(session, limit=limit, offset=page*limit)
+        users = await CRUDUser.list_users(session, limit=limit, offset=page * limit)
 
     if not users:
         await safe_edit_message(cb.message, "Users not found.", reply_markup=None)
@@ -138,11 +141,19 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
     total_pages = (total_users - 1) // limit + 1
 
     text = "\n".join(
-        [f"{u.tg_id} — @{u.username or '-'} — {u.first_name or ''} {u.last_name or ''}" for u in users]
+        [
+            f"{u.tg_id} — @{u.username or '-'} — {u.first_name or ''} {u.last_name or ''}"
+            for u in users
+        ]
     )
 
     user_buttons = [
-        [InlineKeyboardButton(text=f"{u.tg_id} @{u.username or '-'}", callback_data=f"admin:user:view:{u.tg_id}")]
+        [
+            InlineKeyboardButton(
+                text=f"{u.tg_id} @{u.username or '-'}",
+                callback_data=f"admin:user:view:{u.tg_id}",
+            )
+        ]
         for u in users
     ]
 
@@ -150,18 +161,22 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
     nav_buttons = []
 
     if page > 0:
-        nav_buttons.append(InlineKeyboardButton(text="◀️ Prev", callback_data=f"admin:users:{page-1}"))
+        nav_buttons.append(
+            InlineKeyboardButton(text="◀️ Prev", callback_data=f"admin:users:{page-1}")
+        )
 
     nav_buttons.append(InlineKeyboardButton(text="🔙 Menu", callback_data="admin:menu"))
 
     if page + 1 < total_pages:
-        nav_buttons.append(InlineKeyboardButton(text="Next ▶️", callback_data=f"admin:users:{page+1}"))
+        nav_buttons.append(
+            InlineKeyboardButton(text="Next ▶️", callback_data=f"admin:users:{page+1}")
+        )
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=user_buttons + [nav_buttons])
 
     await safe_edit_message(
         cb.message,
         f"📋 Список пользователей (страница {page+1}/{total_pages}):\n\n{text}",
-        reply_markup=keyboard
+        reply_markup=keyboard,
     )
     await cb.answer()

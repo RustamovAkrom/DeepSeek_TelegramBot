@@ -1,2 +1,2 @@
-from .users import * # noqa
-from .ai_history import * # noqa
+from .users import *  # noqa
+from .ai_history import *  # noqa

@@ -14,7 +14,7 @@ class Gen(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer('Welcome, please write your promt.')
+    await message.answer("Welcome, please write your promt.")
 
 
 @router.message(Gen.wait)

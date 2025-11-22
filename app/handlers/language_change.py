@@ -1,38 +1,61 @@
-from aiogram import Router
+from aiogram import Router, F
+from aiogram.types import (
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery,
+    Message,
+)
 from aiogram.filters import Command
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+
 from app.crud.users import CRUDUser
-from app.db.base import AsyncSessionLocal
-from config import settings
-from app.services.ai_service import AIService
+from app.services.user_service import ensure_user
+from app.db.base import get_session
+from app.locales.translator import i18n
 
 router = Router()
 
-LANGUAGES = {
-    "en": "English",
-    "ru": "Русский",
-    "uz": "O‘zbekcha"
-}
 
-def language_keyboard() -> InlineKeyboardMarkup:
-    buttons = []
-    for code, name in LANGUAGES.items():
-        buttons.append([InlineKeyboardButton(text=name, callback_data=f"set_lang:{code}")])
+def lang_keyboard(lang: str):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=i18n.t(lang, "btn_en"), callback_data="lang:en"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.t(lang, "btn_ru"), callback_data="lang:ru"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=i18n.t(lang, "btn_uz"), callback_data="lang:uz"
+                )
+            ],
+        ]
+    )
 
-    kb = InlineKeyboardMarkup(inline_keyboard=buttons)  # обязательно передать пустой список
-    return kb
-@router.message(Command("lang"))
+
+@router.message(Command("language"))
 async def choose_language(message: Message):
-    await message.answer("Выберите язык / Choose language / Tilni tanlang:", reply_markup=language_keyboard())
+    async with get_session() as session:
+        user = await ensure_user(session, message.from_user)
 
-@router.callback_query(lambda c: c.data and c.data.startswith("set_lang:"))
-async def set_language(cb: Message):
-    lang_code = cb.data.split(":")[1]
-    async with AsyncSessionLocal() as session:
-        user = await CRUDUser.get_by_tg_id(session, cb.from_user.id)
-        if not user:
-            user = await CRUDUser.create(session, tg_id=cb.from_user.id, username=cb.from_user.username)
-        meta = user.meta or {}
-        meta["language"] = lang_code
-        await CRUDUser.update(session, user, meta=meta)
-    await cb.answer(f"Язык изменен на {LANGUAGES[lang_code]}", show_alert=True)
+        lang = user.get_language()
+
+        await message.answer(
+            i18n.t(lang, "language_choose"), reply_markup=lang_keyboard(lang)
+        )
+
+
+@router.callback_query(F.data.startswith("lang"))
+async def set_language(call: CallbackQuery):
+    lang_code = call.data.split(":")[1]
+
+    async with get_session() as session:
+        user = await ensure_user(session, call.from_user)
+        await CRUDUser.update_meta(session, user, {"language": lang_code})
+
+        await call.answer(i18n.t(lang_code, "language_updated"))
+        await call.message.edit_text(i18n.t(lang_code, "help"))

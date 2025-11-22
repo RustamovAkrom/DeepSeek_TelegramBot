@@ -19,23 +19,35 @@ class User(Base):
     is_bot = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     meta = Column(JSONType, nullable=True)
 
     histories = relationship(
         "AIHistory",
         back_populates="user",
         cascade="all, delete-orphan",
-        lazy="selectin"
+        lazy="selectin",
     )
 
     def get_api_key(self) -> str:
         meta = self.meta or {}
         return meta.get("api_key") or settings.DEEPSEEK_API_KEY
-    
+
     def get_model(self) -> str:
         meta = self.meta or {}
         return meta.get("default_model") or settings.DEFAULT_MODEL
-    
+
+    def get_language(self) -> str:
+        return self.meta["language"] if "language" in self.meta else "en"
+        # if self.meta and "language" in self.meta:
+        #     return self.meta['language']
+
+        # if self.language_code:
+        #     short = self.language_code[:2].lower()
+        #     if short in ['en', 'ru', 'uz']:
+        #         return short
+
+        return "en"
+
     def __repr__(self):
         return f"<User tg_id={self.tg_id} username={self.username}>"

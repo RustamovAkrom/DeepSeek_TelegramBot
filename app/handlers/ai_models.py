@@ -1,6 +1,11 @@
 from aiogram import Router
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 from app.db.base import AsyncSessionLocal
 from app.crud.users import CRUDUser
 from config import settings
@@ -15,7 +20,9 @@ def get_models_kb(current_model: str) -> InlineKeyboardMarkup:
     buttons = []
     for model in AVAILABLE_MODELS:
         text = f"{model} {'✅' if model == current_model else ''}"
-        buttons.append([InlineKeyboardButton(text=text, callback_data=f"set_model:{model}")])
+        buttons.append(
+            [InlineKeyboardButton(text=text, callback_data=f"set_model:{model}")]
+        )
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
@@ -35,10 +42,14 @@ async def show_models(message: Message):
 @router.callback_query(lambda c: c.data.startswith("set_model:"))
 async def set_model(cb: CallbackQuery):
     display_name = cb.data.split(":")[1]  # "DeepSeek V3"
-    model_id = settings.AVAILABLE_MODELS[display_name]  # for example: "deepseek/deepseek-chat-v3-0324"
+    model_id = settings.AVAILABLE_MODELS[
+        display_name
+    ]  # for example: "deepseek/deepseek-chat-v3-0324"
 
     async with AsyncSessionLocal() as session:
         user = await CRUDUser.get_by_tg_id(session, cb.from_user.id)
-        await CRUDUser.update(session, user, meta={**(user.meta or {}), "default_model": model_id})
+        await CRUDUser.update(
+            session, user, meta={**(user.meta or {}), "default_model": model_id}
+        )
 
     await cb.answer(f"Модель установлена: {display_name}", show_alert=True)
