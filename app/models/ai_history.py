@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, BigInteger
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -6,7 +6,7 @@ from app.db.base import Base
 class AIHistory(Base):
     __tablename__ = "ai_histories"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     user_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )

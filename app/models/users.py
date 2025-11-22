@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, func
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, func, BigInteger
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 import sqlalchemy as sa
@@ -9,8 +9,8 @@ JSONType = sa.JSON
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    tg_id = Column(Integer, unique=True, index=True, nullable=False)
+    id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
+    tg_id = Column(BigInteger, unique=True, index=True, nullable=False)
     token = Column(String, nullable=True)
     username = Column(String, nullable=True)
     first_name = Column(String, nullable=True)

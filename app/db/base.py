@@ -11,7 +11,7 @@ DATABASE_URL = (
     else settings.TEST_DATABASE_URL or settings.DATABASE_URL
 )
 
-engine = create_async_engine(DATABASE_URL, echo=settings.ENV == "dev")
+engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()
 
