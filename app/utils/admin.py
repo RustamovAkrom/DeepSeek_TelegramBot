@@ -15,7 +15,7 @@ async def safe_edit_message(msg: Message, text: str, reply_markup=None):
         new_kb = reply_markup.model_dump() if reply_markup else None
 
         if old_text == text and old_kb == new_kb:
-            return  # ничего не менять
+            return
 
         await msg.edit_text(text, reply_markup=reply_markup)
 
@@ -28,7 +28,7 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
     limit = 10
 
     async with AsyncSession() as session:
-        total_users = await CRUDUser.count_users(session)  # добавить метод count_users
+        total_users = await CRUDUser.count_users(session)
         users = await CRUDUser.list_users(session, limit=limit, offset=page * limit)
 
     if not users:
@@ -54,7 +54,6 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
         for u in users
     ]
 
-    # Навигация
     nav_buttons = []
 
     if page > 0:
@@ -73,7 +72,7 @@ async def admin_users_page(cb: CallbackQuery, page: int = 0):
 
     await safe_edit_message(
         cb.message,
-        f"📋 Список пользователей (страница {page+1}/{total_pages}):\n\n{text}",
+        f"📋 Shedule users (page {page+1}/{total_pages}):\n\n{text}",
         reply_markup=keyboard,
     )
     await cb.answer()

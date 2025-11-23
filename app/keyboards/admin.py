@@ -5,9 +5,6 @@ def admin_main_kb():
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="Users", callback_data="admin:users:0")],
-            # [
-            #     InlineKeyboardButton(text="Stats", callback_data="admin:stats")
-            # ]
         ]
     )
 
