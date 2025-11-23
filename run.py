@@ -20,8 +20,9 @@ async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Start the bot"),
         BotCommand(command="help", description="Show help information"),
-        BotCommand(command="history", description="Show your AI history"),
-        BotCommand(command="clear", description="Clear your AI history"),
+        BotCommand(command="admin", description="Admin panel"),
+        BotCommand(command="models", description="Change DeepSeek model"),
+        BotCommand(command="profile", description="Your profile"),
     ]
     await bot.set_my_commands(commands)
 
